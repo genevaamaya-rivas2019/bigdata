@@ -88,7 +88,7 @@
           </v-card-text>
         </v-card>
       </v-dialog>
-      <v-card class="mx-auto pro-card" max-width="800" height="100">
+      <v-card class="mx-auto pro-card" max-width="800" height="120">
         <v-row>
           <v-col>
             <img
@@ -98,11 +98,14 @@
             />
           </v-col>
           <v-col class="text-left" cols="8">
-            <h2>Redgie Gravador</h2>
-            <p class="mail">Batch: 2021</p>
+            <h2>{{user.firstname}} {{user.lastname}}</h2>
+            <p class="mail">Batch: {{user.batch}}</p>
             <i>
-              <p class="mail">Email: redgie@gmail.com</p>
+              <p class="mail">Email: {{user.email}}</p>
             </i>
+          </v-col>
+          <v-col>
+            <v-btn color="orange" @click="openDetails(item.why, item.category, item.dateOfSubmit, item.statusDate)">Update</v-btn>
           </v-col>
         </v-row>
       </v-card>
@@ -138,7 +141,7 @@
                 <td class="text-center">{{ item.when }}</td>
                 <td class="text-center">{{ item.status }}</td>
                 <td class="text-center">
-                  <v-icon @click="dialog1 = true">mdi-information</v-icon>
+                  <!-- <v-icon @click="dialog1 = true">mdi-information</v-icon> -->
                 </td>
               </tr>
             </tbody>
@@ -155,6 +158,35 @@
           <span class="headline">Requests Details</span>
         </v-card-title>
         <v-divider color="light-blue lighten-2"></v-divider>
+        <br />
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>{{dialogInfo.category}}</v-list-item-title>
+            <v-divider color="gray"></v-divider>
+            <v-list-item-subtitle>Category</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>{{dialogInfo.why}}</v-list-item-title>
+            <v-divider color="gray"></v-divider>
+            <v-list-item-subtitle>Reason</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>{{dialogInfo.dateOfSubmit}}</v-list-item-title>
+            <v-divider color="gray"></v-divider>
+            <v-list-item-subtitle>Date Submitted</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title>{{dialogInfo.statusDate}}</v-list-item-title>
+            <v-divider color="gray"></v-divider>
+            <v-list-item-subtitle>Status Date</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn dark color="light-blue accent-3" @click="dialog1=false">close</v-btn>
@@ -171,29 +203,18 @@ export default {
   name: "studentform",
   data() {
     return {
+      dialogInfo: {
+        why: "",
+        category: "",
+        dateOfSubmit: "",
+        statusDate: ""
+      },
       valid: true,
       list: [],
       modal: false,
-      close: false,
       dialog: false,
       dialog1: false,
       description: "",
-      valid: true,
-      name: "",
-      nameRules: [
-        v => !!v || "Firstname is required",
-        v => (v && v.length <= 15) || "Name must be less than 15 characters"
-      ],
-      lastname: "",
-      lastnameRules: [
-        v => !!v || "Lastname is required",
-        v => (v && v.length <= 15) || "Name must be less than 15 characters"
-      ],
-      email: "",
-      emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-      ],
       batch: null,
       selectCategory: null,
       date: null,
@@ -209,6 +230,13 @@ export default {
     this.getUser();
   },
   methods: {
+    openDetails(why, category, dateOfSubmit, statusDate){
+      this.dialogInfo.why = why
+      this.dialogInfo.category = category
+      this.dialogInfo.dateOfSubmit = dateOfSubmit
+      this.dialogInfo.statusDate = statusDate
+      this.dialog1 = true
+    },
     reset() {
       this.dialog = false;
       this.$refs.form.reset();
@@ -230,10 +258,10 @@ export default {
       axios
         .get(`http://localhost:3232/request/${username}`)
         .then(res => {
-          //this.list = res.data.data;
+          this.list = res.data.data;
           console.log("req ", res.data);
           // res.data.data.forEach(element => {
-          //   if (element.batch == batch) {
+          //   if (element.username == batch) {
           //     //console.log(element);
           //     this.list.push(element);
           //   }
