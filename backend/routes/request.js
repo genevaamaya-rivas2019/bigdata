@@ -6,7 +6,18 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 const sender = require("../email");
 
+
+router.get("/request/:username", (req, res)=>{
+  let usernamei = req.params.username;
+  Request.find({username:usernamei}).then(response=>{
+    res.send({ message: "Successfully Retrieved!!", dbresponse: response });
+  }).catch(err=>{
+    res.send(err);
+  })
+})
+
 router.post("/addRequest", (req, res) => {
+  console.log(req.body)
   var user = new Request(req.body);
   var email = req.body.email;
   var io = req.app.get('socketio');

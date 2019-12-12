@@ -2,19 +2,14 @@
   <div id="inspire">
     <div>
       <v-spacer>
-        <br>
-        <br>
+        <br />
+        <br />
       </v-spacer>
       <v-dialog v-model="dialog" max-width="700px">
-        <template v-slot:activator="{ on }">
-          <!-- <v-btn color="blue darken-1" center right absolute dark class="mb-2" v-on="on">
-            <v-icon>mdi-plus</v-icon>New Request
-          </v-btn>-->
-        </template>
         <v-card>
           <v-card-title class="black--text">
             <v-avatar class="mr-3">
-              <img src="@/assets/pnlogo.png" id="logo">
+              <img src="@/assets/pnlogo.png" id="logo" />
             </v-avatar>
             <span class="text-center">New Request</span>
           </v-card-title>
@@ -23,11 +18,11 @@
             <v-container>
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title>Fill in the following information</v-toolbar-title>
-                <v-spacer/>
+                <v-spacer />
               </v-toolbar>
               <v-card-text>
                 <v-form ref="form" v-model="valid" lazy validation>
-                  <br>
+                  <br />
                   <v-select
                     v-model="selectperGroup"
                     :items="perGroup"
@@ -35,7 +30,7 @@
                     label="Request Category"
                     required
                   ></v-select>
-                  <br>
+                  <br />
                   <v-select
                     v-model="selectCategory"
                     :items="category"
@@ -43,7 +38,7 @@
                     label="Request Category"
                     required
                   ></v-select>
-                  <br>
+                  <br />
                   <v-text-field
                     v-model="title"
                     :rules="[v => !!v || 'Title is required']"
@@ -73,7 +68,7 @@
                       <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
                     </v-date-picker>
                   </v-dialog>
-                  <br>
+                  <br />
                   <v-textarea
                     outlined
                     v-model="description"
@@ -85,17 +80,12 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-spacer/>
+                <v-spacer />
                 <v-btn color="blue darken-1" @click="reset">Cancel</v-btn>
                 <v-btn color="orange" :disabled="!valid" @click="sendRequest">Submit</v-btn>
               </v-card-actions>
             </v-container>
           </v-card-text>
-          <!-- <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" text :disabled="!valid" @click="formAction()">Save</v-btn>
-          </v-card-actions>-->
         </v-card>
       </v-dialog>
       <v-card class="mx-auto pro-card" max-width="800" height="100">
@@ -105,10 +95,11 @@
               class="img"
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPT_NbemFlMkIwM0kw_UJEQolB-5smUbH8sln098ofAfwYOSdQ&s"
               alt
-            >
+            />
           </v-col>
           <v-col class="text-left" cols="8">
             <h2>Redgie Gravador</h2>
+            <p class="mail">Batch: 2021</p>
             <i>
               <p class="mail">Email: redgie@gmail.com</p>
             </i>
@@ -116,7 +107,7 @@
         </v-row>
       </v-card>
       <v-card class="mx-auto" max-width="800" color="info" dark>
-        <hr>
+        <hr />
         <v-row>
           <v-col class="text-center">
             <h1>Requests</h1>
@@ -127,113 +118,49 @@
             </v-btn>
           </v-col>
         </v-row>
-        <hr>
+        <hr />
       </v-card>
 
       <v-card class="mx-auto" max-width="800">
-        <!-- <v-expansion-panels focusable>
-          <v-expansion-panel v-for="(item,i) in list" :key="i">
-            <v-expansion-panel-header>
-              <v-row>
-                <v-col>
-                  <h4>Title: {{item.what}}</h4>
-                </v-col>
-                <v-col>
-                  <h4>Needed: {{item.when}}</h4>
-                </v-col>
-              </v-row>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              Reason: {{item.why}}
-              <br>
-              <br>Status:
-              <div class="red lighten-1 text-center">
-                <span class="white--text">{{item.status}}</span>
-              </div>
-              <div v-if="item.status == 'unread'">
-                <v-card outlined color="green" class="text-center">
-                  <span class="white--text">{{item.status}}</span>
-                </v-card>
-              </div>
-              <div v-if="item.status == 'pending'">
-                <v-card outlined color="orange" class="text-center">
-                  <span class="white--text">{{item.status}}</span>
-                </v-card>
-              </div>
-              <div v-if="item.status == 'rejected'">
-                <v-card outlined color="error" class="text-center">
-                  <span class="white--text">{{item.status}}</span>
-                </v-card>
-              </div>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>-->
         <v-simple-table fixed-header height="500px">
           <template v-slot:default>
             <thead>
               <tr>
-                <th class="text-left">Specific</th>
-                <th class="text-left">Date needed</th>
-                <th class="text-left">Status</th>
-                <th class="text-right">Action</th>
+                <th class="text-center">Specific</th>
+                <th class="text-center">Date needed</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item,i) in list" :key="i">
-                <td>{{ item.what }}</td>
-                <td>{{ item.when }}</td>
-                <td>{{ item.status }}</td>
-                <td>
-                  <v-dialog v-model="dialog1" max-width="500px">
-                    <template v-slot:activator="{ on }">
-                      <v-icon small v-on="on">mdi-information-outline</v-icon>
-                    </template>
-                    <v-card class="pa-4">
-                      <v-card-title class="black--text">
-                        <v-list-item-avatar tile right size="62">
-                          <img src="@/assets/pnlogo.png">
-                        </v-list-item-avatar>
-                        <span class="headline">Requests Details</span>
-                      </v-card-title>
-                      <v-divider color="light-blue lighten-2"></v-divider>
-                      <!-- <v-list-item two-line>
-                        <v-list-item-content>
-                          <v-list-item-title>{{firstname+" "+lastname}}</v-list-item-title>
-                          <v-list-item-subtitle>Name</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-list-item two-line>
-                        <v-list-item-content>
-                          <v-list-item-title>{{email}}</v-list-item-title>
-                          <v-list-item-subtitle>Email Address</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-list-item two-line>
-                        <v-list-item-content>
-                          <v-list-item-title>{{contact}}</v-list-item-title>
-                          <v-list-item-subtitle>Contact Number</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-list-item two-line>
-                        <v-list-item-content>
-                          <v-list-item-title>{{note}}</v-list-item-title>
-                          <v-list-item-subtitle>Notes</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item> -->
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn dark color="light-blue accent-3" @click="dialog1=false">close</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                <td class="text-center">{{ item.what }}</td>
+                <td class="text-center">{{ item.when }}</td>
+                <td class="text-center">{{ item.status }}</td>
+                <td class="text-center">
+                  <v-icon @click="dialog1 = true">mdi-information</v-icon>
                 </td>
               </tr>
             </tbody>
-            <v-dialog v-model="dialog" max-width="500px"></v-dialog>
           </template>
         </v-simple-table>
       </v-card>
     </div>
+    <v-dialog v-model="dialog1" max-width="500px">
+      <v-card class="pa-4">
+        <v-card-title class="black--text">
+          <v-list-item-avatar tile right size="62">
+            <img src="@/assets/pnlogo.png" />
+          </v-list-item-avatar>
+          <span class="headline">Requests Details</span>
+        </v-card-title>
+        <v-divider color="light-blue lighten-2"></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn dark color="light-blue accent-3" @click="dialog1=false">close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -248,7 +175,6 @@ export default {
       list: [],
       modal: false,
       close: false,
-      // disable: false,
       dialog: false,
       dialog1: false,
       description: "",
@@ -292,38 +218,30 @@ export default {
       axios
         .post(`http://localhost:3232/getuser`, { username: usernamei })
         .then(resp => {
-          //console.log(resp);
           let user = resp.data.user;
           this.user = user;
-          this.getData(user.batch);
+          this.getData(user.username);
         })
         .catch(err => {
           console.log(err);
         });
     },
-    getData(batch) {
+    getData(username) {
       axios
-        .get("http://localhost:3232/getAllRequest")
+        .get(`http://localhost:3232/request/${username}`)
         .then(res => {
           //this.list = res.data.data;
           console.log("req ", res.data);
-          res.data.data.forEach(element => {
-            if (element.batch == batch) {
-              //console.log(element);
-              this.list.push(element);
-            }
-          });
+          // res.data.data.forEach(element => {
+          //   if (element.batch == batch) {
+          //     //console.log(element);
+          //     this.list.push(element);
+          //   }
+          // });
         })
         .catch(err => console.log(err));
     },
     sendRequest() {
-      //Personal
-      //Group
-
-      //others
-      //health
-      //Sc sup
-      //cn sup
       var isGroupVal = false;
       if (this.selectperGroup === "Group") {
         isGroupVal = true;
@@ -354,7 +272,6 @@ export default {
           console.log(err);
         });
       this.$refs.form.reset();
-      //console.log(body);
     }
   }
 };
