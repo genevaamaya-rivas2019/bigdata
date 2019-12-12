@@ -27,38 +27,14 @@
               </v-toolbar>
               <v-card-text>
                 <v-form ref="form" v-model="valid" lazy validation>
-                  <!-- <v-select
-                    v-model="selectBatch"
-                    :items="batch"
-                    :rules="[v => !!v || 'Batch is required']"
-                    label="Batch"
-                    required
-                  ></v-select>-->
-                  <v-text-field
-                    v-model="name"
-                    prepend-icon="mdi-account"
-                    :counter="15"
-                    :rules="nameRules"
-                    label="Firstname"
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="lastname"
-                    prepend-icon="mdi-account"
-                    :counter="15"
-                    :rules="lastnameRules"
-                    label="Lastname"
-                    required
-                  ></v-text-field>
-
-                  <v-text-field
-                    v-model="email"
-                    prepend-icon="mdi-email"
-                    :rules="emailRules"
-                    label="E-mail"
-                    required
-                  ></v-text-field>
                   <br>
+                  <v-select
+                    v-model="selectperGroup"
+                    :items="perGroup"
+                    :rules="[v => !!v || 'Category is required']"
+                    label="Request Category"
+                    required
+                  ></v-select>
                   <br>
                   <v-select
                     v-model="selectCategory"
@@ -207,11 +183,53 @@
                 <td>{{ item.what }}</td>
                 <td>{{ item.when }}</td>
                 <td>{{ item.status }}</td>
-                <td class="text-right">
-                  <v-icon class="pointer">mdi-information-outline</v-icon>
+                <td>
+                  <v-dialog v-model="dialog1" max-width="500px">
+                    <template v-slot:activator="{ on }">
+                      <v-icon small v-on="on">mdi-information-outline</v-icon>
+                    </template>
+                    <v-card class="pa-4">
+                      <v-card-title class="black--text">
+                        <v-list-item-avatar tile right size="62">
+                          <img src="@/assets/pnlogo.png">
+                        </v-list-item-avatar>
+                        <span class="headline">Requests Details</span>
+                      </v-card-title>
+                      <v-divider color="light-blue lighten-2"></v-divider>
+                      <!-- <v-list-item two-line>
+                        <v-list-item-content>
+                          <v-list-item-title>{{firstname+" "+lastname}}</v-list-item-title>
+                          <v-list-item-subtitle>Name</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item two-line>
+                        <v-list-item-content>
+                          <v-list-item-title>{{email}}</v-list-item-title>
+                          <v-list-item-subtitle>Email Address</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item two-line>
+                        <v-list-item-content>
+                          <v-list-item-title>{{contact}}</v-list-item-title>
+                          <v-list-item-subtitle>Contact Number</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item two-line>
+                        <v-list-item-content>
+                          <v-list-item-title>{{note}}</v-list-item-title>
+                          <v-list-item-subtitle>Notes</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item> -->
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn dark color="light-blue accent-3" @click="dialog1=false">close</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                 </td>
               </tr>
             </tbody>
+            <v-dialog v-model="dialog" max-width="500px"></v-dialog>
           </template>
         </v-simple-table>
       </v-card>
@@ -232,6 +250,7 @@ export default {
       close: false,
       // disable: false,
       dialog: false,
+      dialog1: false,
       description: "",
       valid: true,
       name: "",
@@ -252,13 +271,10 @@ export default {
       batch: null,
       selectCategory: null,
       date: null,
+      selectperGroup: "Personal",
       currentDate: new Date().toISOString().substr(0, 10),
-      category: [
-        "Personal",
-        "Whole Batch",
-        "Center Supplies",
-        "School Supplies"
-      ],
+      category: ["Center Supplies", "School Supplies", "Health", "Others"],
+      perGroup: ["Personal", "Group"],
       title: "",
       user: {}
     };
@@ -277,7 +293,7 @@ export default {
         .post(`http://localhost:3232/getuser`, { username: usernamei })
         .then(resp => {
           //console.log(resp);
-          let user = resp.data.user
+          let user = resp.data.user;
           this.user = user;
           this.getData(user.batch);
         })
@@ -301,25 +317,37 @@ export default {
         .catch(err => console.log(err));
     },
     sendRequest() {
+      //Personal
+      //Group
+
+      //others
+      //health
+      //Sc sup
+      //cn sup
+      var isGroupVal = false;
+      if (this.selectperGroup === "Group") {
+        isGroupVal = true;
+      }
       let body = {
-        batch: this.batch,
+        batch: this.user.batch,
         category: this.selectCategory,
-        firstname: this.name,
-        lastname: this.lastname,
-        email: this.email,
+        firstname: this.user.firstname,
+        lastname: this.user.lastname,
+        email: this.user.email,
         what: this.title,
         when: this.date,
         why: this.description,
         status: "unread",
         statusDate: new Date(),
-        dateOfSubmit: new Date()
+        dateOfSubmit: new Date(),
+        isGroup: isGroupVal
       };
       let url = "http://localhost:3232/addRequest";
       axios
         .post(url, body)
         .then(resp => {
           this.list = [];
-          this.getData();
+          this.getData(this.user.batch);
           this.dialog = false;
         })
         .catch(err => {
